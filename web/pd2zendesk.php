@@ -6,6 +6,7 @@ $zd_username = getenv('ZENDESK_USERNAME');
 $zd_api_token = getenv('ZENDESK_API_TOKEN');
 $pd_subdomain = getenv('PAGERDUTY_SUBDOMAIN');
 $pd_api_token = getenv('PAGERDUTY_API_TOKEN');
+$debug = getenv('DEBUG_ENABLED');
 
 if ($messages) foreach ($messages->messages as $webhook) {
   $webhook_type = $webhook->type;
@@ -13,7 +14,9 @@ if ($messages) foreach ($messages->messages as $webhook) {
   $ticket_id = $webhook->data->incident->trigger_summary_data->extracted_fields->ticket_id;
   $ticket_url = $webhook->data->incident->html_url;
   $pd_requester_id = $webhook->data->incident->assigned_to_user->id;
-
+  if ($debug == "true"){
+     error_log("ticket_id to take action :" .$ticket_id);
+  }
   switch ($webhook_type) {
     case "incident.trigger":
       $verb = "triggered";
@@ -63,7 +66,7 @@ function http_request($url, $data_json, $method, $auth_type, $username, $token) 
   curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
   curl_setopt($ch, CURLOPT_POSTFIELDS,$data_json);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-  curl_setopt($ch, CURLOPT_VERBOSE, true);
+  //curl_setopt($ch, CURLOPT_VERBOSE, true);
   $response  = curl_exec($ch);
   $status_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
   curl_close($ch);
