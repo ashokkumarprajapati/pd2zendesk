@@ -22,5 +22,8 @@
     "PAGERDUTY_SUBDOMAIN": {
       "description": "The name of your PagerDuty subdomain, as it appears in the URL."
     }
+    "DEBUG_ENABLED": {
+      "description": "Enabled Debug for this application."
+    }
   }
 }
